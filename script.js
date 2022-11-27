@@ -1,88 +1,92 @@
-const cellElements = document.querySelectorAll(".cell")
-const gameStatsEl = document.getElementById("game-status")
-const restartBtnEl = document.getElementById("restart-btn")
-let currentPlayer = "X" 
-let gameState = ["","","","","","","","","",""] 
+const cellElements = document.querySelectorAll(".cell");
+const gameStatsEl = document.getElementById("game-status");
+const restartBtnEl = document.getElementById("restart-btn");
+const confettiVisible = document.getElementById("canvas");
+let currentPlayer = "X";
+let gameState = ["", "", "", "", "", "", "", "", "", ""];
 const winningCombination = [
-    [0,1,2],
-    [3,4,5],
-    [6,7,8],
-    [0,3,8],
-    [1,4,7],
-    [2,5,8],
-    [0,4,8],
-    [2,4,6]
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
 ];
 
-const restartGame = ()=>{
-  arrO = []
-  arrX = []
-  currentPlayer = "X" 
-  gameState = ["","","","","","","","","",""]
-  cellElements.forEach(cell=>{
-    cell.innerText=""
-    cell.style.pointerEvents = 'auto'
-    
-  })
-  
-  gameStatsEl.innerText = `It's ${currentPlayer}'s Turn`
-}
+const restartGame = () => {
+  confettiVisible.style.visibility = "hidden";
+  arrO = [];
+  arrX = [];
+  currentPlayer = "X";
+  gameState = ["", "", "", "", "", "", "", "", "", ""];
+  cellElements.forEach((cell) => {
+    cell.innerText = "";
+    cell.style.pointerEvents = "auto";
+  });
 
-restartBtnEl.addEventListener("click", restartGame)
+  gameStatsEl.innerText = `It's ${currentPlayer}'s Turn`;
+};
 
-const handleClick = (event, index) =>{
-  if(gameState[index]!=="") return; 
-  
+restartBtnEl.addEventListener("click", restartGame);
+
+const handleClick = (event, index) => {
+  if (gameState[index] !== "") return;
+
   gameState[index] = currentPlayer;
   const cellEl = event.currentTarget;
   cellEl.innerText = currentPlayer;
-  currentPlayer = currentPlayer==="X"?"O":"X"
-  gameStatsEl.innerText = `It's ${currentPlayer}'s Turn`
-  checkResult()
-}
+  currentPlayer = currentPlayer === "X" ? "O" : "X";
+  gameStatsEl.innerText = `It's ${currentPlayer}'s Turn`;
+  checkResult();
+};
 
+cellElements.forEach((cell, index) => {
+  cell.addEventListener("click", (e) => handleClick(e, index));
+});
 
-cellElements.forEach((cell,index)=>{
-  cell.addEventListener("click", e=>handleClick(e, index))
-})
-
-
-
-
-let arrX = []
-let arrO = []
- const checkResult = ()=>{
-     for(let i in gameState){
-       if(gameState[i] == "X"){
-           gameState[i] = gameState.indexOf(gameState[i])
-           arrX.push(gameState[i])
-        }else if(gameState[i] == "O"){
-            gameState[i] = gameState.indexOf(gameState[i])
-            arrO.push(gameState[i])
-        }
-     }
-     searching()
+let arrX = [];
+let arrO = [];
+const checkResult = () => {
+  for (let i in gameState) {
+    if (gameState[i] == "X") {
+      gameState[i] = gameState.indexOf(gameState[i]);
+      arrX.push(gameState[i]);
+    } else if (gameState[i] == "O") {
+      gameState[i] = gameState.indexOf(gameState[i]);
+      arrO.push(gameState[i]);
     }
-    
-function searching(){
-    for(let i=0; i<winningCombination.length; i++){
-        if(arrX.includes(winningCombination[i][0]) && arrX.includes(winningCombination[i][1]) && arrX.includes(winningCombination[i][2]) ){
-            gameStatsEl.innerHTML = 'x is the winner'
-           disableCells()
+  }
+  searching();
+};
 
-        }else if(arrO.includes(winningCombination[i][0]) && arrO.includes(winningCombination[i][1]) && arrO.includes(winningCombination[i][2])){
-            gameStatsEl.innerHTML = 'O is the winner'
-           disableCells()
-        }
-    } 
-}
-function disableCells(){
-    for(let i = 0; i < cellElements.length; i++){
-       cellElements[i].style.pointerEvents = 'none'
+function searching() {
+  for (let i = 0; i < winningCombination.length; i++) {
+    if (
+      arrX.includes(winningCombination[i][0]) &&
+      arrX.includes(winningCombination[i][1]) &&
+      arrX.includes(winningCombination[i][2])
+    ) {
+      gameStatsEl.innerHTML = "X is the winner";
+      confettiVisible.style.visibility = "visible";
+      disableCells();
+    } else if (
+      arrO.includes(winningCombination[i][0]) &&
+      arrO.includes(winningCombination[i][1]) &&
+      arrO.includes(winningCombination[i][2])
+    ) {
+      gameStatsEl.innerHTML = "O is the winner";
+      confettiVisible.style.visibility = "visible";
+      disableCells();
     }
+  }
 }
-
-
+function disableCells() {
+  for (let i = 0; i < cellElements.length; i++) {
+    cellElements[i].style.pointerEvents = "none";
+  }
+}
 
 // function checkResult(){
 //  checkingX()
@@ -109,9 +113,3 @@ function disableCells(){
 //   if(gameState[5]=="O" && gameState[2]== "O" && gameState[8] == "O") gameStatsEl.innerText = "0 is a winner"
 //   if(gameState[7]=="O" && gameState[6]== "O" && gameState[8] == "O") gameStatsEl.innerText = "0 is a winner"
 // }
-
-
-
-
-
-    
